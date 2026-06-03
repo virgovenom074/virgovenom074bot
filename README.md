@@ -1,70 +1,141 @@
-# Crypto Bot
+# Ethereum Balance Checker
 
-Crypto Bot is an all-in-one assistant for cryptocurrency users, traders, and enthusiasts. It provides real-time price data, charts, news, portfolio tracking, wallet guides, alerts, security tips, and premium trading features—all in one easy-to-use bot.
+Check balances for multiple Ethereum/EVM addresses from a file.
+
+## Installation
+
+1. Clone or download the script
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+### Basic Usage
+
+Create a file with addresses (one per line):
+
+```bash
+# addresses.txt
+0x742d35Cc6634C0532925a3b844Bc152e5e7b5f5a
+0x1234567890123456789012345678901234567890
+```
+
+Then run:
+
+```bash
+python check_balances.py addresses.txt
+```
+
+Output will be saved to `balances.json` by default.
+
+### Specify Output File
+
+```bash
+python check_balances.py addresses.txt results.json
+```
+
+### Using a Custom RPC Endpoint
+
+```bash
+# Use environment variable
+RPC_ENDPOINT=https://your-rpc-url.com python check_balances.py addresses.txt
+```
+
+### Using Infura (Recommended)
+
+1. Get a free API key from [Infura](https://infura.io)
+2. Run:
+
+```bash
+INFURA_KEY=your_api_key python check_balances.py addresses.txt
+```
+
+### Using Alchemy (Recommended)
+
+1. Get a free API key from [Alchemy](https://www.alchemy.com/)
+2. Run:
+
+```bash
+ALCHEMY_KEY=your_api_key python check_balances.py addresses.txt
+```
+
+## Output
+
+The script creates a JSON file with results:
+
+```json
+[
+  {
+    "address": "0x742d35Cc6634C0532925a3b844Bc152e5e7b5f5a",
+    "balance_wei": "0x1a4d5f0a9e2c8f1b",
+    "balance_eth": 0.118504,
+    "status": "success"
+  },
+  {
+    "address": "0x1234567890123456789012345678901234567890",
+    "error": "Failed to retrieve balance",
+    "status": "error"
+  }
+]
+```
+
+Console output includes:
+- Progress for each address
+- Summary with total addresses, successful checks, failed checks
+- Total ETH across all addresses
+
+## RPC Endpoints Used (in order)
+
+1. Ankr - `https://rpc.ankr.com/eth`
+2. Cloudflare - `https://cloudflare-eth.com`
+3. Blast API - `https://eth-mainnet.public.blastapi.io`
+4. Pokt Network - `https://eth-rpc.gateway.pokt.network`
+
+If one fails, the script automatically tries the next.
 
 ## Features
 
-- **Real-Time Data:** Check current prices and charts for any coin.
-- **News:** Get the latest crypto news and scam/phishing alerts.
-- **Glossary:** Look up definitions of common crypto terms.
-- **Wallet Support:** Learn about wallet types, setup, mnemonic/seed phrases, and security.
-- **Portfolio Tracking:** Monitor your crypto holdings and performance.
-- **Alerts:** Set price and transaction alerts for coins.
-- **Transaction Tools:** Check transaction status and estimate network fees.
-- **Trading Guidance:** Access trading guides and a list of reputable exchanges.
-- **Premium Features:** Unlock VIP price/volume alerts, paid trade signals, and arbitrage opportunities.
+✅ Batch check multiple addresses  
+✅ Handles rate limiting with automatic retries  
+✅ Validates address format  
+✅ Saves results to JSON  
+✅ Displays progress in real-time  
+✅ Shows summary statistics  
+✅ Works with custom RPC endpoints  
+✅ Supports Infura and Alchemy APIs  
 
-## Commands
+## Troubleshooting
 
-| Command         | Description                                  |
-|-----------------|----------------------------------------------|
-| `/start`        | Start interacting with the bot               |
-| `/help`         | Show all commands and instructions           |
-| `/about`        | Learn about this bot                         |
-| `/price`        | Get the current price of a coin              |
-| `/chart`        | View price chart for a coin                  |
-| `/news`         | Latest crypto news                           |
-| `/glossary`     | Crypto term definitions                      |
-| `/wallet_types` | Crypto wallet types explained                |
-| `/wallet_setup` | How to set up a wallet                       |
-| `/mnemonic_info`| What is a mnemonic/seed phrase               |
-| `/key_security` | Wallet/keys safety tips                      |
-| `/portfolio`    | Track your crypto holdings                   |
-| `/alerts`       | Set price/transaction alerts                 |
-| `/tx_status`    | Check transaction status                     |
-| `/fee_calculator`| Estimate network fees                       |
-| `/trade_guide`  | How to trade crypto                          |
-| `/exchanges`    | List of reputable exchanges                  |
-| `/scam_alerts`  | Latest scam/phishing warnings                |
-| `/set_alert`    | Set a price alert                            |
-| `/upgrade`      | Premium features and pricing                 |
-| `/feedback`     | Send feedback or ask for help                |
-| `/premium_alerts`| VIP price/volume/signal alerts              |
-| `/signals`      | Paid trade signals                           |
-| `/arbitrage`    | Arbitrage opportunities (premium)            |
+**"Request failed: 403 Forbidden"**
+- The RPC endpoint is blocking your requests. Try using Infura or Alchemy.
 
-## Getting Started
+**"Request failed: 429 Too Many Requests"**
+- Rate limiting. Use Infura or Alchemy with an API key for higher limits.
 
-1. **Clone the repository:**
-git clone https://github.com/yourusername/crypto-bot.git
-cd crypto-bot
+**"Connection Error"**
+- Check your internet connection or RPC endpoint URL.
 
-text
-2. **Install dependencies:**  
-*(Add your installation instructions here, e.g., `npm install` or `pip install -r requirements.txt`.)*
-3. **Configure API keys:**  
-*(Describe how to set up any required API keys or environment variables.)*
-4. **Run the bot:**  
-*(Add your command to start the bot, e.g., `npm start` or `python bot.py`.)*
+**"Invalid Ethereum address format"**
+- Ensure addresses are valid Ethereum addresses (42 characters, starting with 0x).
 
-## Contributing
+## Supported Chains
 
-Contributions are welcome! Please open an issue or submit a pull request for suggestions and improvements.
+This script works with any EVM-compatible blockchain by changing the RPC endpoint:
+
+- Ethereum Mainnet (default)
+- Polygon: `https://polygon-rpc.com`
+- Arbitrum: `https://arb1.arbitrum.io/rpc`
+- Optimism: `https://mainnet.optimism.io`
+- Base: `https://mainnet.base.org`
+
+Example:
+```bash
+RPC_ENDPOINT=https://polygon-rpc.com python check_balances.py addresses.txt
+```
 
 ## License
 
-This project is licensed under the MIT License.
-
----
-
-*For questions or support, use the `/feedback` command or open an issue on GitHub.*
+MIT License - See repository for details
